@@ -1,7 +1,9 @@
-package com.shop.fashionmale.security.userprintical;
+package com.shop.fashionmale.security.usercustome;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shop.fashionmale.model.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-
+@Getter
+@Setter
 public class UserPrinciple implements UserDetails {
     private String id;
     private String username;
@@ -18,6 +21,7 @@ public class UserPrinciple implements UserDetails {
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> role;
+    private String rolename;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role;
@@ -25,24 +29,33 @@ public class UserPrinciple implements UserDetails {
     public UserPrinciple() {
     }
 
-    public UserPrinciple(String id, String username, String email, String password, Collection<? extends GrantedAuthority> role) {
+//    public UserPrinciple(String id, String username, String email, String password, Collection<? extends GrantedAuthority> role) {
+//        this.id = id;
+//        this.username = username;
+//        this.email = email;
+//        this.password = password;
+//        this.role = role;
+//    }
+    public UserPrinciple(String id, String username, String email, String password, String rolename) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.rolename = rolename;
     }
     public static UserPrinciple build(User user){
-//        List<GrantedAuthority> authorities = Arrays.stream(user.getRole().getRoleName().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName()));
-        return  new UserPrinciple(
+//        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName()));
+        return new UserPrinciple(
                 user.getId(),
-                user.getEmail(),
                 user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
-                authorities
+                user.getRole().getRoleName()
+//                authorities
         );
     }
+    public String getId() {return id;}
+
     @Override
     public String getPassword() {
         return password;

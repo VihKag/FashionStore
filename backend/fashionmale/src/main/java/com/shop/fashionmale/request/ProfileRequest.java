@@ -1,4 +1,4 @@
-package com.shop.fashionmale.dto.request;
+package com.shop.fashionmale.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class ProfileForm {
-    private String firstName;
 
-    private String lastName;
+    private String firstname;
+
+    private String lastname;
 
     private String phone;
 

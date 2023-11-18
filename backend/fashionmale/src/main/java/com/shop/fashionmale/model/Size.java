@@ -3,5 +3,5 @@ package com.shop.fashionmale;
 import javax.persistence.Entity;
 
 @Entity
-public class Price {
+public class Size {
 }
