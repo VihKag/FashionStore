@@ -8,7 +8,7 @@ import CreateProductDetailForm from "../components/Form/CreateProduct";
 import Warehouse from "../pages/Warehouse";
 import UserSale from "../components/Table/UserSale";
 import UserCustomer from "../components/Table/UserCustomer";
-import Inventory from "../components/Form/Inventory";
+import Inventory from "../pages/Inventory";
 import Profile from "../pages/Profile";
 const Admin = () => {
   return (

@@ -10,7 +10,7 @@ const listcustomers = async ({page}) => {
         return response.data;
         }
         catch(error){
-            console.error('Lỗi trong quá trình lấy dữ liệu từ API:', error);
+            console.error(error);
         };
 }
 
@@ -25,7 +25,7 @@ const liststaffs = async ({page}) => {
         return response.data;
         }
         catch(error){
-            console.error('Lỗi trong quá trình lấy dữ liệu từ API:', error);
+            console.error(error);
         };
 }
 export {listcustomers,liststaffs};

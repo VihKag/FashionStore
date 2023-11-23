@@ -1,64 +1,75 @@
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { useHandleChange } from '../../utils/FormUtils';
+import { getListColor,getListSize } from "../../api/PropertiesApi";
+import { addProduct } from "../../api/ProductApi";
+import { showSuccessToast, showErrorToast } from '../../utils/toastUtils';
+import { ToastContainer} from 'react-toastify';
 const CreateProductDetailForm = () => {
   const warehouses = [
-    { id: 1, name: "WH1" },
-    { id: 2, name: "WH2" },
+    { id: "HCM001", name: "Kho 1" },
   ];
   const categories = [
-    { id: 1, name: "CG1" },
-    { id: 2, name: "CG2" },
+    { id: "MEN006", name: "Áo thun" },
   ];
-  const colourOptions = [
-    { value: "Đỏ nâu", label: "Đỏ nâu" },
-    { value: "Đen", label: "Đen" },
-    { value: "Xanh rêu", label: "Xanh rêu" },
-  ];
-  const sizeOptions = [
-    { value: "Small", label: "S" },
-    { value: "Medium", label: "M" },
-    { value: "Large", label: "L" },
-    { value: "Extra Large", label: "xL" },
-    { value: "2 Extra Large", label: "2xL" },
-  ];
+  const [colourOptions, setColourOptions] = useState([]);
+  const [sizeOptions, setSizeOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async (getApi, setData,id, value) => {
+      try {
+        const response = await getApi();
+        const formattedData = response.data.map(item => ({
+          value: item[id], 
+          label: item[value],  
+        }));
+        setData(formattedData);
+      } catch (err) {
+        console.error(`Error during get API:`, err);
+      }
+    };
+  
+    fetchData(getListColor, setColourOptions, 'id', 'colorName');
+    fetchData(getListSize, setSizeOptions, 'id', 'sizeName');
+  }, []);
   const initialState = {
-    warehouse_id: '',
-    product_name: '',
-    product_id: '',
+    warehouseId: '',
+    productName: '',
+    productId: '',
     category: '',
     color: [],
     size: [],
     description: '',
+    productdetails: [],
   };
-  const [products, handleChange1] = useHandleChange(initialState);
+  const [products, handleChangeProducts] = useHandleChange(initialState);
 
   const [productList, setProductList] = useState([]);
   const generateProductList = () => {
-    const { warehouse_id, product_id, color, size } = products;
+    const { warehouseId, productId, color, size } = products;
     const newProductList = [];
     for (const colorOption of color) {
       for (const sizeOption of size) {
-        const productdetail_id = `${product_id}-${warehouse_id}-${colorOption}-${sizeOption}-${Date.now()}`;
+        const productdetailId = `${productId}-${warehouseId}-${colorOption}-${sizeOption}-${Date.now()}`;
 
         const newProduct = {
-          warehouse_id: warehouse_id,
-          productdetail_id,
-          product_id,
-          stock_quantity: 1, 
-          selectedSize: sizeOption,
-          selectedColor: colorOption,
+          warehouseId: warehouseId,
+          productdetailId,
+          productId,
+          stockQuantity: 1, 
+          size: sizeOption,
+          color: colorOption,
           purchasePrice: 0, 
-          sellingPrice: 0,
+          priceSelling: 0,
         };
 
         newProductList.push(newProduct);
       }
     }
-
     setProductList(newProductList);
+    handleChangeProducts('productdetails', newProductList);
   };
 
   const removeProduct = (index) => {
@@ -66,18 +77,47 @@ const CreateProductDetailForm = () => {
     updatedProducts.splice(index, 1);
     setProductList(updatedProducts);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(productList);
-    console.log(products);
+    
+    const dataToSend = {
+      productId: products.productId,
+      productName: products.productName,
+      category: products.category,
+      description: products.description,
+      productdetails: productList.map((product) => ({
+        warehouseId: product.warehouseId,
+        productdetailId: product.productdetailId,
+        stockQuantity: product.stockQuantity,
+        size: product.size,
+        color: product.color,
+        purchasePrice: product.purchasePrice,
+        priceSelling: product.priceSelling,
+      })),
+    };
+    console.log(dataToSend);
+    try {
+      const success = await addProduct(dataToSend);
+      if (success) {
+        showSuccessToast('Thêm sản phẩm thành công');
+      }
+    } catch (err) {
+      console.error(err);
+      showErrorToast('Thêm sản phẩm thất bại');
+    }
   };
   const handleSubmitSave = (e) => {
     e.preventDefault();
+    if ( !products.warehouseId || !products.productId || !products.productName || !products.category|| !products.color || !products.size ) {
+      showErrorToast('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
     generateProductList();
-    console.log(products);
   };
+
   return (
     <div className="mx-auto">
+      <ToastContainer />
       <div className="mb-4">
         <form onSubmit={handleSubmitSave}>
           <div className="w-full text-blue-500 font-bold flex text-xl mb-2">
@@ -94,14 +134,14 @@ const CreateProductDetailForm = () => {
                     Warehouse
                   </div>
                   <select 
-                    value={products.warehouse_id}
-                    onChange={(e) => handleChange1('warehouse_id', e.target.value)}
+                    value={products.warehouseId}
+                    onChange={(e) => handleChangeProducts('warehouseId', e.target.value)}
                     className="block w-52 h-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 my-auto">
-                    <option selected>Choose warehouse</option>
+                    {/* <option selected>Choose warehouse</option> */}
+                    <option value="">Choose warehouse</option>
                     {warehouses.map((item, index) => (
                       <option key={index} 
                         value={item.id}
-                        // onClick={()=> setProducts({...products, category: item.id})}
                         >
                         {item.name}
                       </option>
@@ -114,8 +154,8 @@ const CreateProductDetailForm = () => {
                     Product ID
                   </div>
                   <input
-                    value={products.product_id}
-                    onChange={(e)=> handleChange1('product_id', e.target.value)}
+                    value={products.productId}
+                    onChange={(e)=> handleChangeProducts('productId', e.target.value)}
                     type="text"
                     className="block w-52 h-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                   />
@@ -124,8 +164,8 @@ const CreateProductDetailForm = () => {
                 <div className="flex items-center mb-2">
                   <div className="mr-2 mb-2 w-20 text-md font-medium">Name</div>
                   <input
-                    value={products.product_name}
-                    onChange={(e)=> handleChange1('product_name', e.target.value)}
+                    value={products.productName}
+                    onChange={(e)=> handleChangeProducts('productName', e.target.value)}
                     type="text"
                     className="block w-52 h-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                   />
@@ -139,13 +179,12 @@ const CreateProductDetailForm = () => {
                   </div>
                   <select 
                     value={products.category}
-                    onChange={(e) => handleChange1('category', e.target.value)}
+                    onChange={(e) => handleChangeProducts('category', e.target.value)}
                     className="block w-52 h-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 my-auto">
-                    <option selected>Choose category</option>
+                    <option value="">Choose category</option>
                     {categories.map((item, index) => (
                       <option key={index} 
                         value={item.id} 
-                        // onClick={()=> setProducts({...products, category: item.id})}
                         >
                         {item.name}
                       </option>
@@ -156,14 +195,13 @@ const CreateProductDetailForm = () => {
                 <div className="flex items-center mb-2">
                   <div className="mr-2 mb-2 w-20 text-md font-medium">Size</div>
                   <Select
-                    // defaultValue={sizeOptions[0]}
                     name="size"
                     isMulti
                     options={sizeOptions}
                     className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={(selectedOptions) =>
-                      handleChange1(
+                      handleChangeProducts(
                         "size",
                         selectedOptions.map((option) => option.value)
                       )
@@ -182,7 +220,7 @@ const CreateProductDetailForm = () => {
                     className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={(selectedOptions) =>
-                      handleChange1(
+                      handleChangeProducts(
                         "color",
                         selectedOptions.map((option) => option.value)
                       )
@@ -201,7 +239,7 @@ const CreateProductDetailForm = () => {
               <textarea
                 id="decription"
                 value={products.decription}
-                onChange={(e) => handleChange1('description', e.target.value)}
+                onChange={(e) => handleChangeProducts('description', e.target.value)}
                 rows="4"
                 className="block p-2.5 w-80 md:w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Write decription here..."
@@ -254,20 +292,20 @@ const CreateProductDetailForm = () => {
               {productList.map((product, index) => (
                 <tr key={index}>
                   <td className="px-6 py-3">
-                    <div>{product.productdetail_id}</div>
+                    <div>{product.productdetailId}</div>
                   </td>
 
                   <td className="px-6 py-3">
                     <input
-                      defaultValue={product.stock_quantity}
+                      defaultValue={product.stockQuantity}
                       type="number"
                       className="text-sm rounded-md"
                     />
                   </td>
 
-                  <td className="px-6 py-3">{product.selectedSize}</td>
+                  <td className="px-6 py-3">{product.size}</td>
 
-                  <td className="px-6 py-3">{product.selectedColor}</td>
+                  <td className="px-6 py-3">{product.color}</td>
 
                   <td className="px-6 py-3">
                     <input type='number' defaultValue={product.purchasePrice} className='text-sm rounded-md'/>
