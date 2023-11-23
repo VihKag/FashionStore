@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IUserService {
-    void deleteById(String id);
-    List<User> searchUserByUsername(String search);
+    List<User> searchUserByUsername(String username);
     Optional<User> findUserByUsername(String username);
     Optional<User> findById(String id);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
     User save(User user);
     Page<User> findAll(Pageable pageable);
+    void deleteById(String id);
+    void addRole(String username,String roleName);
 }

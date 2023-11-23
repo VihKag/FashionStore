@@ -1,6 +1,6 @@
 package com.shop.fashionmale.security.jwt;
 
-import com.shop.fashionmale.security.userprintical.UserPrinciple;
+import com.shop.fashionmale.security.usercustome.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.*;
+
 @Component
 @Slf4j
 public class JwtProvider {
@@ -21,9 +22,19 @@ public class JwtProvider {
 
 
     public String createToken(Authentication authentication){
-        UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-        return Jwts.builder().setSubject(userPrinciple.getUsername()).setIssuedAt(new Date()).setExpiration(new Date(new  Date().getTime()+jwtExpiration*1000))
-                .signWith(SignatureAlgorithm.HS256,jwtSecret)
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("user", userPrincipal.getUsername());
+        claims.put("role", userPrincipal.getAuthorities());
+        claims.put("userId", userPrincipal.getId());
+//        return Jwts.builder().setSubject(userPrinciple.getUsername()).setIssuedAt(new Date()).setExpiration(new Date(new  Date().getTime()+jwtExpiration*1000))
+//                .signWith(SignatureAlgorithm.HS256,jwtSecret)
+//                .compact();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + jwtExpiration * 1000))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
     public boolean validateToken(String token){
@@ -47,7 +58,11 @@ public class JwtProvider {
     }
 
     public String getUserNameFromToken(String token){
-        String userName = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+        String userName =(String) Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("user");
         return userName;
+    }
+    public String getRoleFromToken(String token){
+        ArrayList list =(ArrayList) Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("role");
+        return list.toString();
     }
 }

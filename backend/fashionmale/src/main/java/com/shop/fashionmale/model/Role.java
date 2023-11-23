@@ -1,26 +1,24 @@
 package com.shop.fashionmale.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "role")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "role_id", nullable = false)
     private Long id;
 
     @Column(name = "role_name")
     private String roleName;
-
-    @OneToMany(mappedBy = "role")
-    private Set<User> users = new LinkedHashSet<>();
 
 }

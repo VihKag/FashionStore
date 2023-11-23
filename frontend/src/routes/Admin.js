@@ -1,14 +1,13 @@
 import { Route, Routes} from "react-router-dom";
 import Dashboard from "../components/Dashboard/Dashboard";
 import DashboardNav from "../components/Dashboard/DashboardNav";
-import Categories from '../pages/Categoties';
-import User from "../pages/User";
+import Categories from '../components/Table/Categories';
 import Products from "../components/Table/Products";
-import CreateProductDetailForm from "../components/Form/CreateProduct";
-import Warehouse from "../pages/Warehouse";
+import CreateProductDetailForm from "../pages/Admin/CreateProduct";
+import Warehouse from "../pages/Admin/Warehouse";
 import UserSale from "../components/Table/UserSale";
 import UserCustomer from "../components/Table/UserCustomer";
-import Inventory from "../pages/Inventory";
+import Inventory from "../pages/Admin/Inventory";
 import Profile from "../pages/Profile";
 const Admin = () => {
   return (
@@ -17,7 +16,6 @@ const Admin = () => {
       <Route path="/" element={<DashboardNav />}>
             <Route path="" element={<Dashboard />}/>
             <Route path="categories" element={<Categories />}/>
-            <Route path="users" element={<User />}/>
             <Route path="staffs" element={<UserSale />}/>
             <Route path="customers" element={<UserCustomer />}/>
             <Route path="products" element={<Products />}/>

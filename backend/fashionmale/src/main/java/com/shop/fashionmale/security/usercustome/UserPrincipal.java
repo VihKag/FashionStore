@@ -11,47 +11,39 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class UserPrinciple implements UserDetails {
+public class UserPrincipal implements UserDetails {
     private String id;
     private String username;
     private String email;
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> role;
-    private String rolename;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role;
     }
-    public UserPrinciple() {
+    public UserPrincipal() {
     }
 
-//    public UserPrinciple(String id, String username, String email, String password, Collection<? extends GrantedAuthority> role) {
-//        this.id = id;
-//        this.username = username;
-//        this.email = email;
-//        this.password = password;
-//        this.role = role;
-//    }
-    public UserPrinciple(String id, String username, String email, String password, String rolename) {
+    public UserPrincipal(String id, String username, String email, String password, Collection<? extends GrantedAuthority> role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.rolename = rolename;
+        this.role = role;
     }
-    public static UserPrinciple build(User user){
-//        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName()));
-        return new UserPrinciple(
+    public static UserPrincipal build(User user){
+        List<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
+        return new UserPrincipal(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getRole().getRoleName()
-//                authorities
+                authorities
         );
     }
     public String getId() {return id;}

@@ -2,7 +2,7 @@ package com.shop.fashionmale.config;
 
 import com.shop.fashionmale.security.jwt.JwtEntryPoint;
 import com.shop.fashionmale.security.jwt.JwtTokenFilter;
-import com.shop.fashionmale.security.userprintical.UserDetailService;
+import com.shop.fashionmale.security.usercustome.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

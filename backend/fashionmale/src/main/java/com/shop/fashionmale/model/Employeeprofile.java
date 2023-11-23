@@ -1,4 +1,4 @@
-package com.shop.fashionmale;
+package com.shop.fashionmale.model;
 
 import com.shop.fashionmale.model.User;
 import lombok.Getter;

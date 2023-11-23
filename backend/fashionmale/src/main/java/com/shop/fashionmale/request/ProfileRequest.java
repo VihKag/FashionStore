@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProfileForm {
+public class ProfileRequest {
 
     private String firstname;
 

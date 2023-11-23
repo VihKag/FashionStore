@@ -1,14 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import imgFashion from "../assets/icon/tshirt.png";
+import imgFashion from "../../assets/icon/tshirt.png";
 import {useState, useEffect} from "react";
-import { getProductDetails } from "../api/ProductApi";
+import { getProductDetails } from "../../api/ProductApi";
 import {
   faEye,
   faFilter,
   faPenToSquare,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import Pagination from "../components/Common/Pagination";
+import Pagination from "../../components/Common/Pagination";
 const Inventory = () => {
     const [usePage,setPage]= useState({
         totalPages: 0,

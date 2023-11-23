@@ -245,21 +245,18 @@ const Products = () => {
                     <FontAwesomeIcon
                       icon={faPenToSquare}
                       style={{ color: "#ff9b00" }}
-                      size="xl"
                     />
                   </a>
                   <a href="/#" class="mx-2 font-medium text-blue-600">
                     <FontAwesomeIcon
                       icon={faTrash}
                       style={{ color: "#ff0000" }}
-                      size="xl"
                     />
                   </a>
                   <a href="/#" class="mx-2 font-medium text-blue-600">
                     <FontAwesomeIcon
                       icon={faEye}
                       style={{ color: "#000000" }}
-                      size="xl"
                     />
                   </a>
                 </td>

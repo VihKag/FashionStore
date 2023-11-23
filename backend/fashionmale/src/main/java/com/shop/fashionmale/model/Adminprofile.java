@@ -1,9 +1,11 @@
 package com.shop.fashionmale.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -13,14 +15,14 @@ import java.util.UUID;
 @Table(name = "adminprofile")
 public class Adminprofile {
     @Id
-    @Column(name = "admin_id", columnDefinition = "CHAR(36)", nullable = false)
-    private String id;
+    @Size(max = 36)
+    @Column(name = "user_id", nullable = false, length = 36)
+    private String userId;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "admin_id", nullable = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -35,5 +37,7 @@ public class Adminprofile {
 
     @Column(name = "birthday")
     private LocalDate birthday;
+
+
 
 }

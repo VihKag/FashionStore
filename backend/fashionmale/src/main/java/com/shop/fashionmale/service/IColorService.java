@@ -1,2 +1,7 @@
-package com.shop.fashionmale.service;public interface IColorService {
+package com.shop.fashionmale.service;
+
+import com.shop.fashionmale.model.Color;
+
+public interface IColorService {
+    Color getColorByColorName(String colorName);
 }

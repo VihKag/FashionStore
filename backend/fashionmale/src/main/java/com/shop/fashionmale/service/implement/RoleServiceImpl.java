@@ -1,6 +1,7 @@
 package com.shop.fashionmale.service.Implement;
 
 import com.shop.fashionmale.model.Role;
+import com.shop.fashionmale.model.User;
 import com.shop.fashionmale.repository.IRoleRepository;
 import com.shop.fashionmale.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,13 @@ public class RoleServiceImpl implements IRoleService {
     @Autowired
     IRoleRepository roleRepository;
     @Override
-    public Optional<Role> findByName(String rolename) {
-        return roleRepository.findByRoleName(rolename);
+    public Role findByName(String name) {
+        return roleRepository.findByRoleName(name);
     }
+
+    @Override
+    public Role save(Role role) {
+        return roleRepository.save(role);
+    }
+
 }

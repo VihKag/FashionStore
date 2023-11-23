@@ -1,4 +1,4 @@
-package com.shop.fashionmale.dto.response;
+package com.shop.fashionmale.response;
 
 public class ResponseMessage {
     private String message;

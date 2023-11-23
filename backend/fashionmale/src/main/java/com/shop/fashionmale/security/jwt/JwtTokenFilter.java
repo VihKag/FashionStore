@@ -24,11 +24,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
     UserDetailsService userDetailsService;
 
-
-    private String getJwt(HttpServletRequest request){
-        String autnHeader = request.getHeader("Authorization");
-        if(autnHeader != null && autnHeader.startsWith("Bearer")){
-            return autnHeader.replace("Bearer", "");
+    public String getJwt(HttpServletRequest request){
+        String header = request.getHeader("Authorization");
+        if(header != null && header.startsWith("Bearer")){
+            return header.replace("Bearer", "");
         }
         return null;
     }

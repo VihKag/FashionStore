@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import Pagination from "../Common/Pagination";
 import CateModal from "../../models/CateModal";
-const ChildCategories = () => {
+const Categories = () => {
   const data = [
     { id: "ABC11", category: "Áo sơ mi trắng cổ điển" , parent:"Áo sơ mi nam"},
     { id: "ABC22", category: "Áo sơ mi trắng slim fit", parent:"Áo sơ mi nam" },
@@ -12,7 +12,7 @@ const ChildCategories = () => {
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg my-2">
-      <div className="font-semibold text-xl">Categories: 2nd</div>
+      <div className="font-semibold text-xl">Categories</div>
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -79,4 +79,4 @@ const ChildCategories = () => {
     </>
   );
 };
-export default ChildCategories;
+export default Categories;
