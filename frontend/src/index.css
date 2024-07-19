@@ -1,0 +1,28 @@
+@tailwind base;
+/* @layer base {
+    html {
+      @apply text-neutral-800;
+    }
+    html.dark {
+      @apply text-neutral-50;
+      @apply bg-neutral-800;
+    }
+  } */
+  
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap');
+.dropdown-menu {
+  @apply relative;
+}
+
+@layer base {
+  html {
+    @apply bg-gray-100;
+  }
+}
+
+.dropdown-menu::before {
+  content: "";
+  @apply absolute -top-2 left-4 border-b-8 border-b-white border-r-8 border-r-transparent border-l-8 border-l-transparent;
+}
